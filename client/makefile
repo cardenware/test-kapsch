@@ -29,7 +29,10 @@ $(BUILD_LIB_DIR):
 run: $(BINARY)
 	LD_LIBRARY_PATH=$(BUILD_LIB_DIR) ./$(BINARY) 4 6 50001 10 32768 50 2 30251
 
+debug: $(BINARY)
+	LD_LIBRARY_PATH=$(BUILD_LIB_DIR) valgrind ./$(BINARY) 4 6 50001 10 32768 50 2 30251
+
 clean:
 	rm -rf $(BUILD_DIR)/*
 
-.PHONY: all clean
+.PHONY: all clean run debug

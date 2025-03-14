@@ -190,7 +190,6 @@ int main(int argc, char **argv)
     for (int i = 0; i < lenNums; ++i)
     {
         pthread_join(threadProcesses[i], NULL);
-        free(threadArgsArray[i]);
     }
 
     while (nextResultIndex != resultCount)
