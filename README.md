@@ -20,6 +20,7 @@ The task involves implementing a simple number factorization application using a
   - `make` and `make clean` are available for each Makefile.
   - `make` creates a new `build` directory if it does not already exist.
   - Both `client` and `server` have a `make run` target to test each component.
+  - To debug the `client`, run `make debug`: this command will automatically install Valgrind if it's not already installed, and then generate a detailed debug report in a file called client.log located in the root client directory.
 
 ## Executing by Terminal
 

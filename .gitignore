@@ -21,6 +21,7 @@
 # Debugging files
 *.gdb
 *.gdbinit
+*.log
 
 # Temporary files
 *.tmp
