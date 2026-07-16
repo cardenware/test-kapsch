@@ -29,7 +29,11 @@ $(BUILD_LIB_DIR):
 run: $(BINARY)
 	LD_LIBRARY_PATH=$(BUILD_LIB_DIR) ./$(BINARY) 4 6 50001 10 32768 50 2 30251
 
+debug: $(BINARY)
+	@command -v valgrind > /dev/null 2>&1 || { echo "Valgrind not found. Installing..."; sudo apt-get install -y valgrind; }
+	LD_LIBRARY_PATH=$(BUILD_LIB_DIR) valgrind --show-leak-kinds=all --verbose --log-file=client.log ./$(BINARY) 4 6 50001 10 32768 50 2 30251
+
 clean:
 	rm -rf $(BUILD_DIR)/*
 
-.PHONY: all clean
+.PHONY: all clean run debug

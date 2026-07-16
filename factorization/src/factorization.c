@@ -1,6 +1,15 @@
 # include "factorization.h"
 
 
+/**
+ * factorize - Function that finds the factors of a given number.
+ *
+ * @param num: The number to be factorized.
+ * @param len: Pointer to the length of the array.
+ * @param factors: Pointer to an array to store the factors.
+ *
+ * @return: None.
+ */
 void factorize(uint16_t num, int *len, uint16_t *factors)
 {
     *len = 0;

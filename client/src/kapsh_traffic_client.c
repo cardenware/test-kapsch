@@ -12,7 +12,6 @@
 #define MAX_NUMBERS 10
 #define HOST "127.0.0.1"
 #define PORT 8080
-#define SA struct sockaddr
 
 typedef struct factorizationResult
 {
@@ -44,6 +43,21 @@ void *printResult(void *);
 void *requestHandling(void *);
 
 
+/**
+ * Main function.
+ * 
+ * This function handles the command line arguments and
+ * initializes the program. It then creates threads for each
+ * number to be factored and waits for them to finish.
+ * The user can also configure de server IP and port using
+ * --host and --port options.
+ 
+ * @param argc: The number of command line arguments.
+ * @param argv: The array of command line arguments.
+
+ * @return: int.
+ * 
+ */
 int main(int argc, char **argv)
 {
     char **numbers;
@@ -176,7 +190,6 @@ int main(int argc, char **argv)
     for (int i = 0; i < lenNums; ++i)
     {
         pthread_join(threadProcesses[i], NULL);
-        free(threadArgsArray[i]);
     }
 
     while (nextResultIndex != resultCount)
@@ -202,6 +215,19 @@ int main(int argc, char **argv)
     return 0;
 }
 
+
+/**
+ * Prints the factorization results.
+ *
+ * This function runs in a separate thread and continuously prints the factorization
+ * results in order as FIFO. It uses a mutex and a condition variable to synchronize
+ * access to the results array. The function terminates when the resultCount variable
+ * is set to -1.
+ *
+ * @param args: a pointer to a void that is not used in the function
+
+ * @return: void.
+ */
 void *printResult(void *args)
 {
     do
@@ -230,6 +256,19 @@ void *printResult(void *args)
     pthread_exit(NULL);
 }
 
+
+/**
+ * This function handles the request to the server.
+ *
+ * It receives the input arguments from the main function, connects to the server,
+ * sends the number to factorize, receives the result, and saves it to the results
+ * array. It uses a mutex and a condition variable to synchronize the access to the
+ * results array. It terminates when the resultCount variable is set to -1.
+ *
+ * @param args: a pointer to a ThreadArgs structure containing the input arguments
+
+ * @return: void.
+ */
 void *requestHandling(void *args)
 {
     ThreadArgs *threadArgsData = (ThreadArgs *)args;
@@ -240,7 +279,7 @@ void *requestHandling(void *args)
     char *num = threadArgsData->strNumber;
 
     int socketFd = connect2server(host, port);
-    if (socketFd == -1)
+    if (socketFd < 0)
     {
         close(socketFd);
         free(threadArgsData);

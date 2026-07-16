@@ -1,6 +1,16 @@
 #include "networking.h"
 
 
+/**
+ * Hosts a local server on the specified port.
+ *
+ * @param port: the port to host the server on.
+ *
+ *@return:  the file descriptor of the socket if successful.
+ *          -1 if socket creation fails.
+ *          -2 if binding fails.
+ *          -3 if listening fails.
+ */
 int hostLocalServer(int port)
 {
     int socketFd;
@@ -42,6 +52,17 @@ int hostLocalServer(int port)
 }
 
 
+/**
+ * Connects to a server at the specified host and port.
+ *
+ * @param host: A string representing the host IP address or hostname.
+ * @param port: An integer representing the port number.
+ *
+ * @return: the socket file descriptor if successful.
+ *          -1 if socket creation fails.
+ *          -2 if the given address or address type is not supported.
+ *          -3 if connection fails.
+ */
 int connect2server(char *host, int port)
 {
     int socketFd, ServerAddrLen;

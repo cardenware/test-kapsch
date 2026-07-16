@@ -24,14 +24,22 @@ void print_usage(const char *prog_name)
     printf("Usage: %s [--host <host>] [--port <port>]\n", prog_name);
 }
 
-void cleanup_and_exit(int);
-
 void *handleClient(void *);
-void *processFactorization(int *);
 
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 
+/**
+ * The main function of the server.
+ * This function parses the command line arguments, sets the port number,
+ * creates a server socket, and handles the client connections.
+ * The port number can be set using the --port option.
+ 
+ * @param argc: The number of command line arguments.
+ * @param argv: The array of command line arguments.
+ *
+ * @return: 0 if the program finishes successfully, 1 if there is an error.
+ */
 int main(int argc, char **argv)
 {
     int socketFd, clientAddrLen, *clientSocket;
@@ -101,7 +109,7 @@ int main(int argc, char **argv)
         {
             printf("Socket accept failed\n");
             free(clientSocket);
-            return 4;
+            return 1;
         }
         else
         {
@@ -127,6 +135,20 @@ int main(int argc, char **argv)
 }
 
 
+/**
+ * Handle client connection.
+ *
+ * This function handles the client connection by reading the message from the client.
+ * If the message is not empty, it is converted to an integer and checked if it is greater
+ * than the maximum valid number. If it is, a "-1" string is sent back to the client. If the
+ * message is valid, it is processed to find its factors and the results are sent back to the
+ * client. The function runs in an infinite loop until the client disconnects, at which point
+ * the function closes the connection and frees the memory allocated for the client socket.
+ *
+ * @param clientSocket: A pointer to an integer representing the client socket.
+ *
+ * @return: void.
+ */
 void *handleClient(void *clientSocket)
 {
     int _clientSocket = *(int *)clientSocket;
@@ -148,8 +170,10 @@ void *handleClient(void *clientSocket)
 
         if (strlen(message) > 0)
         {
+            // FIXME: Can check overflow on setting the maximum valid number (65535)
+            // with strtoul()
             uint16_t numb = atoi(message);
-            if (numb > MAX_NUMBER)
+            if (numb < 0 || numb > MAX_NUMBER)
             {
                 printf(
                     "The number %d can't be processed. The maximum valid number is %d\n",
